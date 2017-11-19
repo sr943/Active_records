@@ -80,11 +80,16 @@ class main {
     table :: printtable($resultset,$line);
 
 
-
-
-
-
- 
+    $td = new todo();
+    $collection = new todos();
+    $id=17;
+    $string = $id.',"new@njit.edu",14,"2017-11-19","2017-11-19","new inserted row",0';
+    $results = $collection->delete($id);
+    $results = $collection->insert($string);
+    
+    $line="<h3>Record inserted in todos table for id = 17 : </h3>";    
+    $resultset = $collection->fetch();         
+    table :: printtable($resultset,$line);
 
   }
   catch(PDOException $e)
@@ -155,27 +160,7 @@ $html="";
       $conn = null;
     }
 
-    /*public static function printRow($result,$line){
-$html="";
-      
-      
-      $html.= $line;
-      $html.="<table style='border: 1px solid black'>";     
-      $html.="<tr>";     
-      foreach ($result as $row) {
-        $html.="<tr>";        
-          $html.="<td style='border: 1px solid black'>$row </td>";          
-      } 
-      $html.="</tr>";   
-      $html.="</table>";
-      $html.="<br><hr>";
-        print_r(  $html); 
-      globals :: all($html);
-
-      
-      $conn = null;
-    }*/
-
+    
   }
 
 class collection{
@@ -240,10 +225,23 @@ class collection{
 
         $db = dbConn::getConnection();
         $tableName = get_called_class();        
-        $sql = "DELETE FRom " . $tableName .  " WHERE id = ". $id;
+        $sql = "DELETE FROM " . $tableName .  " WHERE id = ". $id;
         $statement = $db->prepare($sql);
         $statement->execute();        
         return 'Deleted';
+
+    }
+
+
+    public function insert($string){
+
+        $db = dbConn::getConnection();
+        $tableName = get_called_class();     
+        //$sql="";   
+        $sql = "INSERT INTO " . $tableName .  " VALUES ("  . $string . ")";
+        $statement = $db->prepare($sql);
+        $statement->execute();        
+        return 'Inserted';
 
     }
   
