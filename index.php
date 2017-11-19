@@ -42,8 +42,9 @@ class main {
     table :: printtable($resultset,$line);
     $id = 2;
     $resultset = $collection->fetchOne($id);
+    //print_r(  $resultset )  ;
     $line="<h3>One record from todos table : </h3>";
-    table :: printRow($resultset,$line);
+    table :: printtable($resultset,$line);
 
 
     $ac = new accounts();
@@ -54,20 +55,33 @@ class main {
     $id = 5;
     $resultset = $collection->fetchOne($id);
     $line="<h3>One record from accounts table : </h3>";
-    table :: printRow($resultset,$line);
+    table :: printtable($resultset,$line);
 
     $ac = new accounts();
     $collection = new accounts();
-    $id = 13;
+    $id = 12;
     $phone = "phone";
-    $phoneno=5565656;
-    
+    $phoneno=4521126855;
     $results = $collection->update($phone,$phoneno, $id);
     print_r($results);
+    $line="<h3>Phone number updated for id 12 from accounts table : </h3>";    
+    $resultset = $collection ->fetchOne($id);      
+    //print_r($resultset);   
+    table :: printtable($resultset,$line);
 
-    $line="<h3>Updated record : </h3>";    
-    $resultset = $collection->fetchOne($id);         
-    table :: printRow($resultset,$line);
+
+    $td = new todo();
+    $collection = new todos();
+    $id = 6;
+    $results = $collection->delete($id);
+    print_r($results);
+    $line="<h3>Record deleted from todos table where id is 6 : </h3>";    
+    $resultset = $collection->fetch();         
+    table :: printtable($resultset,$line);
+
+
+
+
 
 
  
@@ -141,7 +155,7 @@ $html="";
       $conn = null;
     }
 
-    public static function printRow($result,$line){
+    /*public static function printRow($result,$line){
 $html="";
       
       
@@ -149,19 +163,18 @@ $html="";
       $html.="<table style='border: 1px solid black'>";     
       $html.="<tr>";     
       foreach ($result as $row) {
-        
-          $html.="<td style='border: 1px solid black'>$row </td>";
-           
+        $html.="<tr>";        
+          $html.="<td style='border: 1px solid black'>$row </td>";          
       } 
       $html.="</tr>";   
       $html.="</table>";
       $html.="<br><hr>";
-
+        print_r(  $html); 
       globals :: all($html);
 
       
       $conn = null;
-    }
+    }*/
 
   }
 
@@ -204,7 +217,7 @@ class collection{
         $class = static::$modelName;
         $statement->setFetchMode(PDO::FETCH_CLASS, $class);
         $recordsSet =  $statement->fetchAll();
-        return $recordsSet[0];
+        return $recordsSet;
 
 
 
@@ -214,12 +227,23 @@ class collection{
   
  public function update($phone, $phoneno,$id){
 
-    $db = dbConn::getConnection();
+        $db = dbConn::getConnection();
         $tableName = get_called_class();        
         $sql = "UPDATE " . $tableName . " SET " . $phone . " = " . $phoneno . " WHERE id = ". $id;
         $statement = $db->prepare($sql);
         $statement->execute();        
         return 'successful!!!!';
+
+    }
+
+  public function delete($id){
+
+        $db = dbConn::getConnection();
+        $tableName = get_called_class();        
+        $sql = "DELETE FRom " . $tableName .  " WHERE id = ". $id;
+        $statement = $db->prepare($sql);
+        $statement->execute();        
+        return 'Deleted';
 
     }
   
