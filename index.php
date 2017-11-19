@@ -51,9 +51,22 @@ class main {
     $resultset = $collection->fetch();
     $line="<h3>All the records from accounts table : </h3>";
     table :: printtable($resultset,$line);
-    $id = 13;
+    $id = 5;
     $resultset = $collection->fetchOne($id);
     $line="<h3>One record from accounts table : </h3>";
+    table :: printRow($resultset,$line);
+
+    $ac = new accounts();
+    $collection = new accounts();
+    $id = 13;
+    $phone = "phone";
+    $phoneno=5565656;
+    
+    $results = $collection->update($phone,$phoneno, $id);
+    print_r($results);
+
+    $line="<h3>Updated record : </h3>";    
+    $resultset = $collection->fetchOne($id);         
     table :: printRow($resultset,$line);
 
 
@@ -197,20 +210,20 @@ class collection{
 
     }
   
+
+  
+ public function update($phone, $phoneno,$id){
+
+    $db = dbConn::getConnection();
+        $tableName = get_called_class();        
+        $sql = "UPDATE " . $tableName . " SET " . $phone . " = " . $phoneno . " WHERE id = ". $id;
+        $statement = $db->prepare($sql);
+        $statement->execute();        
+        return 'successful!!!!';
+
+    }
+  
 }
-  
- /* public function put($conn, $tablename, $id){
-
-    $stmt = $conn->prepare('SELECT * FROM ' . $tablename . ' WHERE id =' . $id);    //fetching data from DB
-    $stmt->execute();
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);  
-    $line="<h3>One record from " . $tablename . " table is: </h3>";     // using associative array 
-    table :: printtable($result, $tablename, $line);
-
-
-    }*/
-  
-
 
 class accounts extends collection {
     protected static $modelName = 'account';
