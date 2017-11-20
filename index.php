@@ -81,28 +81,26 @@ public function query(){
     $line="<h3>Phone number updated for id 12 from accounts table : </h3>";  
     $collection1 = new accounts();
     $resultset = $collection1->fetchOne(12);      
-    //print_r($resultset);   
     table :: printtable($resultset,$line);
+
+
+
+
+    $td1 = new todo();
+    $td1->save();
+    $collection = new todos();
+    $resultset = $collection->fetch();
+    $line="<h3>New row inserted in todos table with id as 901 : </h3>";
+    table :: printtable($resultset,$line);
+
 
 
     $td = new todo();
     $collection = new todos();
-    $id = 6;
+    $id = 901;
     $results = $td->delete($id);
-    print_r($results);
-    $line="<h3>Record deleted from todos table where id is 6 : </h3>";    
-    $resultset = $collection->fetch();         
-    table :: printtable($resultset,$line);
-
-
-    //$td = new todo();
-    //$collection = new todos();
-    
-    $td->id=17;
-    $results = $td->delete($id);
-    $results = $td->save();
-    
-    $line="<h3>Record inserted in todos table for id = 17 : </h3>";    
+    //print_r($results);
+    $line="<h3>Record deleted from todos table where id is 901 : </h3>";    
     $resultset = $collection->fetch();         
     table :: printtable($resultset,$line);
 
@@ -121,6 +119,7 @@ class dbConn{
             self::$db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
         }
         catch (PDOException $e) {
+        
             //Output error - would normally log this to error file rather than output to user.
             echo "Connection Error: " . $e->getMessage();
         }
@@ -181,20 +180,16 @@ class collection{
 
   public function fetch(){
 
-   
+    
         $db = dbConn::getConnection();
         $tableName = get_called_class();
         $sql = 'SELECT * FROM ' . $tableName;
-      //  echo $sql;
         $statement = $db->prepare($sql);
         $statement->execute();
         $class = static::$modelName;
         $statement->setFetchMode(PDO::FETCH_CLASS, $class);
         $recordsSet =  $statement->fetchAll();
         return $recordsSet;
-
-
-
     }
   
 
@@ -216,42 +211,6 @@ class collection{
 
     }
   
-
-  
- /*public function update($phone, $phoneno,$id){
-
-        $db = dbConn::getConnection();
-        $tableName = get_called_class();        
-        $sql = "UPDATE " . $tableName . " SET " . $phone . " = " . $phoneno . " WHERE id = ". $id;
-        $statement = $db->prepare($sql);
-        $statement->execute();        
-        return 'successful!!!!';
-
-    }
-
-  public function delete($id){
-
-        $db = dbConn::getConnection();
-        $tableName = get_called_class();        
-        $sql = "DELETE FROM " . $tableName .  " WHERE id = ". $id;
-        $statement = $db->prepare($sql);
-        $statement->execute();        
-        return 'Deleted';
-
-    }
-
-
-    public function insert($string){
-
-        $db = dbConn::getConnection();
-        $tableName = get_called_class();     
-        //$sql="";   
-        $sql = "INSERT INTO " . $tableName .  " VALUES ("  . $string . ")";
-        $statement = $db->prepare($sql);
-        $statement->execute();        
-        return 'Inserted';
-
-    }*/
   
 }
 
@@ -273,6 +232,8 @@ class model {
         } else {
             $sql = $this->update();
         }
+
+
         $db = dbConn::getConnection();
         $statement = $db->prepare($sql);
         $statement->execute();
@@ -286,7 +247,7 @@ class model {
        $tableName = $this->tableName;         
         $sql = "Update ". $tableName . " SET ".static::$column."='".static::$newphnNo."' WHERE id=" . $this->id;
         //$statement = $db->prepare($sql);
-        //$statement->execute();        
+        //$statement->execute();             
         return $sql;
 
     }
@@ -305,12 +266,8 @@ class model {
 
     public function insert(){
 
-       // $db = dbConn::getConnection();
-        $tableName = $this->tableName;      
-        //$sql="";   
-        $sql = "INSERT INTO " . $tableName .  " VALUES ("  . static :: $string . ")";
-       // $statement = $db->prepare($sql);
-        //$statement->execute();        
+         
+        $sql = "INSERT INTO " . $this->tableName .  " VALUES ("  . static :: $string . ")";
         return $sql;
 
     }
@@ -349,7 +306,7 @@ class todo extends model {
     public $message;
     public $isdone;
 
-   static $string = '20,"new@njit.edu",14,"2017-11-19","2017-11-19","new inserted row",0';
+   static $string = '901,"new@njit.edu",14,"2017-11-19","2017-11-19","NEW ROW",0';
     
 
     public function __construct(){
