@@ -34,63 +34,10 @@ class main {
     $html.= "<h3>Connected successfully </h3><hr>";    //conection message
     globals :: all($html);
 
-    
-    $td = new todo();
-    $collection = new todos();
-    $resultset = $collection->fetch();
-    $line="<h3>All the records from todos table : </h3>";
-    table :: printtable($resultset,$line);
-    $id = 2;
-    $resultset = $collection->fetchOne($id);
-    //print_r(  $resultset )  ;
-    $line="<h3>One record from todos table : </h3>";
-    table :: printtable($resultset,$line);
+    $q= new All();
+    $q-> query();
 
-
-    $ac = new accounts();
-    $collection = new accounts();
-    $resultset = $collection->fetch();
-    $line="<h3>All the records from accounts table : </h3>";
-    table :: printtable($resultset,$line);
-    $id = 5;
-    $resultset = $collection->fetchOne($id);
-    $line="<h3>One record from accounts table : </h3>";
-    table :: printtable($resultset,$line);
-
-    $ac = new accounts();
-    $collection = new accounts();
-    $id = 12;
-    $phone = "phone";
-    $phoneno=4521126855;
-    $results = $collection->update($phone,$phoneno, $id);
-    print_r($results);
-    $line="<h3>Phone number updated for id 12 from accounts table : </h3>";    
-    $resultset = $collection ->fetchOne($id);      
-    //print_r($resultset);   
-    table :: printtable($resultset,$line);
-
-
-    $td = new todo();
-    $collection = new todos();
-    $id = 6;
-    $results = $collection->delete($id);
-    print_r($results);
-    $line="<h3>Record deleted from todos table where id is 6 : </h3>";    
-    $resultset = $collection->fetch();         
-    table :: printtable($resultset,$line);
-
-
-    $td = new todo();
-    $collection = new todos();
-    $id=17;
-    $string = $id.',"new@njit.edu",14,"2017-11-19","2017-11-19","new inserted row",0';
-    $results = $collection->delete($id);
-    $results = $collection->insert($string);
-    
-    $line="<h3>Record inserted in todos table for id = 17 : </h3>";    
-    $resultset = $collection->fetch();         
-    table :: printtable($resultset,$line);
-
+   
   }
   catch(PDOException $e)
   {
@@ -101,6 +48,69 @@ class main {
 
 }
 
+
+class All{
+
+public function query(){
+
+  $collection = new todos();
+    $resultset = $collection->fetch();
+    $line="<h3>All the records from todos table : </h3>";
+    table :: printtable($resultset,$line);
+    $id = 2;
+    $resultset = $collection->fetchOne($id);
+    //print_r(  $resultset )  ;
+    $line="<h3>One record from todos table : </h3>";
+    table :: printtable($resultset,$line);
+
+
+    //$ac = new accounts();
+    $collection1 = new accounts();
+    $resultset = $collection1->fetch();
+    $line="<h3>All the records from accounts table : </h3>";
+    table :: printtable($resultset,$line);
+    $id = 5;
+    $resultset = $collection1->fetchOne($id);
+    $line="<h3>One record from accounts table : </h3>";
+    table :: printtable($resultset,$line);
+
+    //$ac = new accounts();
+    //$collection1 = new accounts();
+    $id = 12;
+    $phone = "phone";
+    $phoneno=4521126855;
+    $results = $collection1->update($phone,$phoneno, $id);
+    print_r($results);
+    $line="<h3>Phone number updated for id 12 from accounts table : </h3>";    
+    $resultset = $collection1 ->fetchOne($id);      
+    //print_r($resultset);   
+    table :: printtable($resultset,$line);
+
+
+    //$td = new todo();
+    //$collection = new todos();
+    $id = 6;
+    $results = $collection->delete($id);
+    print_r($results);
+    $line="<h3>Record deleted from todos table where id is 6 : </h3>";    
+    $resultset = $collection->fetch();         
+    table :: printtable($resultset,$line);
+
+
+    //$td = new todo();
+    //$collection = new todos();
+    $id=17;
+    $string = $id.',"new@njit.edu",14,"2017-11-19","2017-11-19","new inserted row",0';
+    $results = $collection->delete($id);
+    $results = $collection->insert($string);
+    
+    $line="<h3>Record inserted in todos table for id = 17 : </h3>";    
+    $resultset = $collection->fetch();         
+    table :: printtable($resultset,$line);
+
+}
+
+}
 
 class dbConn{
     //variable to hold connection object.
