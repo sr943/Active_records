@@ -74,23 +74,21 @@ public function query(){
     $line="<h3>One record from accounts table : </h3>";
     table :: printtable($resultset,$line);
 
-    //$ac = new accounts();
-    //$collection1 = new accounts();
-    $id = 12;
-    $phone = "phone";
-    $phoneno=4521126855;
-    $results = $collection1->update($phone,$phoneno, $id);
-    print_r($results);
-    $line="<h3>Phone number updated for id 12 from accounts table : </h3>";    
-    $resultset = $collection1 ->fetchOne($id);      
+    $acObj = new account();
+    $acObj->id = 12;
+    $acObj->save();
+    
+    $line="<h3>Phone number updated for id 12 from accounts table : </h3>";  
+    $collection1 = new accounts();
+    $resultset = $collection1->fetchOne(12);      
     //print_r($resultset);   
     table :: printtable($resultset,$line);
 
 
-    //$td = new todo();
-    //$collection = new todos();
+    $td = new todo();
+    $collection = new todos();
     $id = 6;
-    $results = $collection->delete($id);
+    $results = $td->delete($id);
     print_r($results);
     $line="<h3>Record deleted from todos table where id is 6 : </h3>";    
     $resultset = $collection->fetch();         
@@ -99,10 +97,10 @@ public function query(){
 
     //$td = new todo();
     //$collection = new todos();
-    $id=17;
-    $string = $id.',"new@njit.edu",14,"2017-11-19","2017-11-19","new inserted row",0';
-    $results = $collection->delete($id);
-    $results = $collection->insert($string);
+    
+    $td->id=17;
+    $results = $td->delete($id);
+    $results = $td->save();
     
     $line="<h3>Record inserted in todos table for id = 17 : </h3>";    
     $resultset = $collection->fetch();         
@@ -220,7 +218,7 @@ class collection{
   
 
   
- public function update($phone, $phoneno,$id){
+ /*public function update($phone, $phoneno,$id){
 
         $db = dbConn::getConnection();
         $tableName = get_called_class();        
@@ -253,7 +251,7 @@ class collection{
         $statement->execute();        
         return 'Inserted';
 
-    }
+    }*/
   
 }
 
@@ -265,9 +263,12 @@ class todos extends collection {
 }
 class model {
     protected $tableName;
+    static $column;
+    static $newphnNo;
     public function save()
     {
-        if ($this->id = '') {
+
+        if ($this->id == '') {
             $sql = $this->insert();
         } else {
             $sql = $this->update();
@@ -275,12 +276,50 @@ class model {
         $db = dbConn::getConnection();
         $statement = $db->prepare($sql);
         $statement->execute();
+        
       }
+
+
+       public function update(){
+
+        //$db = dbConn::getConnection();
+       $tableName = $this->tableName;         
+        $sql = "Update ". $tableName . " SET ".static::$column."='".static::$newphnNo."' WHERE id=" . $this->id;
+        //$statement = $db->prepare($sql);
+        //$statement->execute();        
+        return $sql;
+
+    }
+
+  public function delete($id){
+
+        $db = dbConn::getConnection();
+        $tableName = $this->tableName;        
+        $sql = "DELETE FROM " . $tableName .  " WHERE id = ". $id;
+        $statement = $db->prepare($sql);
+        $statement->execute();        
+        return 'Deleted';
+
+    }
+
+
+    public function insert(){
+
+       // $db = dbConn::getConnection();
+        $tableName = $this->tableName;      
+        //$sql="";   
+        $sql = "INSERT INTO " . $tableName .  " VALUES ("  . static :: $string . ")";
+       // $statement = $db->prepare($sql);
+        //$statement->execute();        
+        return $sql;
+
+    }
     }
 
 
 class account extends model {
     public $id ;
+
     public $email ;
     public $fname ;
     public $lname ;
@@ -288,6 +327,9 @@ class account extends model {
     public $birthday ;
     public $gender ;
     public $password ;
+
+    static $column = 'phone';
+    static $newphnNo ='0258963147';
     
 
     public function __construct(){
@@ -306,6 +348,9 @@ class todo extends model {
     public $duedate;
     public $message;
     public $isdone;
+
+   static $string = '20,"new@njit.edu",14,"2017-11-19","2017-11-19","new inserted row",0';
+    
 
     public function __construct(){
 
